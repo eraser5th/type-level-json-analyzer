@@ -7,7 +7,7 @@ export type StringToken<V extends string = ""> = {
 
 type Numeric = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-export type NumberToken<V extends number = 0> = {
+export type NumberToken<V extends number = number> = {
   type: "Number";
   value: V;
 };
@@ -33,7 +33,30 @@ export type Token = SimpleToken | StringToken | NumberToken;
 
 type ParseInt<T> = T extends `${infer N extends number}` ? N : never;
 
-type T0 = ParseInt<"1">; // 1
-type T1 = ParseInt<"100">; // 100
-type T2 = ParseInt<"-13">; // -13
-type T3 = ParseInt<"abc">; // never
+(function testParseInt() {
+  {
+    type result = ParseInt<"1">; // 1
+    const _: result = 1;
+    _
+  }
+  {
+    type result = ParseInt<"123">; // 123
+    const _: result = 123;
+    _
+  }
+  {
+    type result = ParseInt<"-12">; // 0
+    const _: result = -12;
+    _
+  }
+  {
+    type result = ParseInt<"ab">; // never
+
+    let x: undefined = undefined;
+    if (x === undefined) {
+    } else {
+      const _: result = x;
+      _
+    }
+  }
+})()

@@ -1,12 +1,13 @@
-import { NumberToken, SimpleToken, StringToken } from "../Token";
-import { AssignableAtoB } from "../util/AssignableAtoB";
-import { Equal } from "../util/Equal";
-import { JoinToString } from "../util/String";
+import type { NumberToken, SimpleToken, StringToken } from "../Token";
+import type { AssignableAtoB } from "../util/AssignableAtoB";
+import type { Equal } from "../util/Equal";
+import type { StringLength } from "../util/String";
+import type { ParseInt, ReadNumber } from "../util/Number";
 
 export type EndTokenizer<S> = S extends "" ? [SimpleToken.End, 0] : never;
 
 export type WhiteSpaceTokenizer<S> =
-  S extends `${" " | "\t" | "\v" | "\f" | "\r" | "\n"}${infer _}`
+  S extends `${" " | "\t" | "\v" | "\f" | "\r" | "\n"}${string}`
   ? [SimpleToken.WhiteSpace, 1]
   : never;
 
@@ -33,7 +34,7 @@ export type WhiteSpaceTokenizer<S> =
   }
 })();
 
-export type ColonTokenizer<S> = S extends `:${infer _}`
+export type ColonTokenizer<S> = S extends `:${string}`
   ? [SimpleToken.Colon, 1]
   : never;
 
@@ -46,35 +47,35 @@ export type ColonTokenizer<S> = S extends `:${infer _}`
   }
 })();
 
-export type CommaTokenizer<S> = S extends `,${infer _}`
+export type CommaTokenizer<S> = S extends `,${string}`
   ? [SimpleToken.Comma, 1]
   : never;
 
-export type LeftBraceTokenizer<S> = S extends `{${infer _}`
+export type LeftBraceTokenizer<S> = S extends `{${string}`
   ? [SimpleToken.LeftBrace, 1]
   : never;
 
-export type RightBraceTokenizer<S> = S extends `}${infer _}`
+export type RightBraceTokenizer<S> = S extends `}${string}`
   ? [SimpleToken.RightBrace, 1]
   : never;
 
-export type LeftSquareBracketTokenizer<S> = S extends `[${infer _}`
+export type LeftSquareBracketTokenizer<S> = S extends `[${string}`
   ? [SimpleToken.LeftSquareBracket, 1]
   : never;
 
-export type RightSquareBracketTokenizer<S> = S extends `]${infer _}`
+export type RightSquareBracketTokenizer<S> = S extends `]${string}`
   ? [SimpleToken.RightSquareBracket, 1]
   : never;
 
-export type TrueTokenizer<S> = S extends `true${infer _}`
+export type TrueTokenizer<S> = S extends `true${string}`
   ? [SimpleToken.True, 4]
   : never;
 
-export type FalseTokenizer<S> = S extends `false${infer _}`
+export type FalseTokenizer<S> = S extends `false${string}`
   ? [SimpleToken.False, 5]
   : never;
 
-export type NullTokenizer<S> = S extends `null${infer _}`
+export type NullTokenizer<S> = S extends `null${string}`
   ? [SimpleToken.Null, 4]
   : never;
 
@@ -142,27 +143,13 @@ export type StringTokenizer<S> = S extends `"${infer Tail}`
   }
 })();
 
-type Numeric = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-type NumericChar = `${Numeric}`;
-
-export type NumberTokenizerInner<
+export type NumberTokenizer<
   S,
-  AccResult extends string = "",
-  AccReadedLength extends never[] = [],
-> = S extends `${infer Head extends NumericChar}${infer Tail}`
-  ? NumberTokenizerInner<
-    Tail,
-    `${AccResult}${Head}`,
-    [...AccReadedLength, never]
-  >
-  : AccResult extends ""
+  ReadedNumber extends number = ReadNumber<S>,
+> =
+  ReadedNumber extends never
   ? never
-  : [
-    NumberToken<ParseInt<AccResult>>,
-    AccReadedLength["length"],
-  ];
-
-export type NumberTokenizer<S> = NumberTokenizerInner<S>;
+  : [NumberToken<ReadedNumber>, StringLength<`${ReadedNumber}`>]
 
 (function() {
   {
@@ -178,4 +165,16 @@ export type NumberTokenizer<S> = NumberTokenizerInner<S>;
 
     const _: Equal<a, b> = true
   }
+
+  {
+    type a = NumberTokenizer<"123abc">
+    type b = [NumberToken<123>, 3]
+    const _: Equal<a, b> = true
+  }
+  {
+    type a = NumberTokenizer<"-123abc">
+    type b = [NumberToken<-123>, 4]
+    const _: Equal<a, b> = true
+  }
+
 })()
