@@ -16,18 +16,7 @@ import {
 } from "./SubTokenizers";
 import { SkipString } from "../util/String";
 
-`
-{
-  "hoge": "fuga",
-}
-`;
-
-type TokenizerInner<
-  S extends string,
-  AccTokens extends Token[] = [],
-  // aliases
-  End = EndTokenizer<S> extends never ? false : true,
-  NextToken extends [Token, number] =
+type TokenizeOnce<S extends string> =
   | RightBraceTokenizer<S>
   | LeftBraceTokenizer<S>
   | ColonTokenizer<S>
@@ -39,16 +28,24 @@ type TokenizerInner<
   | RightSquareBracketTokenizer<S>
   | StringTokenizer<S>
   | CommaTokenizer<S>
-  | NumberTokenizer<S>,
+  | NumberTokenizer<S>
+
+type TokenizerInner<
+  S extends string,
+  AccTokens extends Token[] = [],
+  End = EndTokenizer<S> extends never ? false : true,
+  Result extends [Token, number] = TokenizeOnce<S>,
+  NextToken extends Token = Result[0],
+  ReadedLength extends number = Result[1]
 > = End extends true
   ? [...AccTokens, SimpleToken.End]
-  : NextToken extends never
+  : Result extends never
   ? [...AccTokens, SimpleToken.Bad]
-  : NextToken[0] extends SimpleToken.Bad
+  : NextToken extends SimpleToken.Bad
   ? [...AccTokens, SimpleToken.Bad]
   : TokenizerInner<
-    SkipString<S, NextToken[1]>,
-    [...AccTokens, NextToken[0]]
+    SkipString<S, ReadedLength>,
+    [...AccTokens, NextToken]
   >;
 
 export type Tokenizer<S extends string> = TokenizerInner<S>;

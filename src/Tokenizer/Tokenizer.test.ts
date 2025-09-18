@@ -35,9 +35,27 @@ import { Equal } from "../util/Equal";
     const _: Equal<a, b> = true;
   }
 
+  // array
+  {
+    type a = Tokenizer<"[1,2,3]">;
+    type b = [
+      SimpleToken.LeftSquareBracket,
+      NumberToken<1>,
+      SimpleToken.Comma,
+      NumberToken<2>,
+      SimpleToken.Comma,
+      NumberToken<3>,
+      SimpleToken.RightSquareBracket,
+      SimpleToken.End
+    ];
+
+    const _: Equal<a, b> = true;
+  }
+
   // some tokens
   {
-    type a = Tokenizer<'[true]false{} \n\t 123"hoge"'>;
+    type input = '[true]false{} \n\t 123"hoge"'
+    type a = Tokenizer<input>;
     type b = [
       SimpleToken.LeftSquareBracket,
       SimpleToken.True,
@@ -55,5 +73,51 @@ import { Equal } from "../util/Equal";
     ];
 
     const _: Equal<a, b> = true;
+  }
+  {
+    type input = "[1, \"hoge\", 3]"
+    type a = Tokenizer<input>;
+    type b = [
+      SimpleToken.LeftSquareBracket,
+      NumberToken<1>,
+      SimpleToken.Comma,
+      SimpleToken.WhiteSpace,
+      StringToken<"hoge">,
+      SimpleToken.Comma,
+      SimpleToken.WhiteSpace,
+      NumberToken<3>,
+      SimpleToken.RightSquareBracket,
+      SimpleToken.End,
+    ];
+    const _: Equal<a, b> = true;
+  }
+  {
+    type input = "[ ]"
+    type a = Tokenizer<input>
+    type b = [
+      SimpleToken.LeftSquareBracket,
+      SimpleToken.WhiteSpace,
+      SimpleToken.RightSquareBracket,
+      SimpleToken.End,
+    ]
+
+    const _: Equal<a, b> = true
+  }
+  {
+    type input = "{ \"key\": 123 }"
+    type result = Tokenizer<input>
+    type expected = [
+      SimpleToken.LeftBrace,
+      SimpleToken.WhiteSpace,
+      StringToken<"key">,
+      SimpleToken.Colon,
+      SimpleToken.WhiteSpace,
+      NumberToken<123>,
+      SimpleToken.WhiteSpace,
+      SimpleToken.RightBrace,
+      SimpleToken.End,
+    ]
+
+    const _: Equal<result, expected> = true
   }
 })();

@@ -2,7 +2,7 @@ import type { NumberToken, SimpleToken, StringToken } from "../Token";
 import type { AssignableAtoB } from "../util/AssignableAtoB";
 import type { Equal } from "../util/Equal";
 import type { StringLength } from "../util/String";
-import type { ParseInt, ReadNumber } from "../util/Number";
+import type { ReadNumber } from "../util/Number";
 
 export type EndTokenizer<S> = S extends "" ? [SimpleToken.End, 0] : never;
 
@@ -174,6 +174,11 @@ export type NumberTokenizer<
   {
     type a = NumberTokenizer<"-123abc">
     type b = [NumberToken<-123>, 4]
+    const _: Equal<a, b> = true
+  }
+  {
+    type a = NumberTokenizer<" ">
+    type b = never
     const _: Equal<a, b> = true
   }
 

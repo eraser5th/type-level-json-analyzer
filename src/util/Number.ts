@@ -30,7 +30,9 @@ export type ParseInt<T extends string> = T extends `${infer N extends number}`
 
 // TODO: 小数点の対応
 export type ReadNumber<S, Acc extends string = ""> =
-  StringLength<Acc> extends 0
+  S extends ` ${string}` // 空白文字がなぜかnumberとして認識されるため明示的に除外
+  ? ParseInt<Acc>
+  : StringLength<Acc> extends 0
   // 最初の一文字目は-かもしれない
   ? S extends `${infer _ extends "-"}${infer Tail}`
   ? ReadNumber<Tail, "-">

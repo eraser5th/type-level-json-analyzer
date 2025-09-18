@@ -1,6 +1,6 @@
 export type Keyword = "true" | "false" | "null" | "true" | "false" | "null";
 
-export type StringToken<V extends string = ""> = {
+export type StringToken<V extends string = string> = {
   type: "String";
   value: V;
 };
@@ -13,20 +13,18 @@ export type NumberToken<V extends number = number> = {
 };
 
 export enum SimpleToken {
-  LeftBrace,
-  RightBrace,
-  LeftSquareBracket,
-  RightSquareBracket,
-  Colon,
-  Comma,
-  String,
-  Number,
-  True,
-  False,
-  Null,
-  Bad,
-  End,
-  WhiteSpace,
+  LeftBrace, // {
+  RightBrace, // }
+  LeftSquareBracket, // [
+  RightSquareBracket, // ]
+  Colon, // :
+  Comma, // ,
+  True, // true
+  False, // false
+  Null, // null
+  Bad, // Tokenize error
+  End, // End of tokens
+  WhiteSpace, // Whitespace
 }
 
 export type Token = SimpleToken | StringToken | NumberToken;
