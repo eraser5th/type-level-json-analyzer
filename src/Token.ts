@@ -5,8 +5,6 @@ export type StringToken<V extends string = string> = {
   value: V;
 };
 
-type Numeric = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-
 export type NumberToken<V extends number = number> = {
   type: "Number";
   value: V;
@@ -35,17 +33,17 @@ type ParseInt<T> = T extends `${infer N extends number}` ? N : never;
   {
     type result = ParseInt<"1">; // 1
     const _: result = 1;
-    _
+    _;
   }
   {
     type result = ParseInt<"123">; // 123
     const _: result = 123;
-    _
+    _;
   }
   {
     type result = ParseInt<"-12">; // 0
     const _: result = -12;
-    _
+    _;
   }
   {
     type result = ParseInt<"ab">; // never
@@ -54,7 +52,7 @@ type ParseInt<T> = T extends `${infer N extends number}` ? N : never;
     if (x === undefined) {
     } else {
       const _: result = x;
-      _
+      _;
     }
   }
-})()
+})();

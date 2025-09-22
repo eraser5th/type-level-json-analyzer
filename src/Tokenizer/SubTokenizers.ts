@@ -8,8 +8,8 @@ export type EndTokenizer<S> = S extends "" ? [SimpleToken.End, 0] : never;
 
 export type WhiteSpaceTokenizer<S> =
   S extends `${" " | "\t" | "\v" | "\f" | "\r" | "\n"}${string}`
-  ? [SimpleToken.WhiteSpace, 1]
-  : never;
+    ? [SimpleToken.WhiteSpace, 1]
+    : never;
 
 (function test() {
   {
@@ -85,12 +85,12 @@ export type StringTokenizerInner<
   AccReadedLength extends never[] = [],
 > = S extends `${infer Head}${infer Tail}`
   ? Head extends `"`
-  ? [StringToken<AccResult>, [...AccReadedLength, never, never]["length"]]
-  : StringTokenizerInner<
-    Tail,
-    `${AccResult}${Head}`,
-    [...AccReadedLength, never]
-  >
+    ? [StringToken<AccResult>, [...AccReadedLength, never, never]["length"]]
+    : StringTokenizerInner<
+        Tail,
+        `${AccResult}${Head}`,
+        [...AccReadedLength, never]
+      >
   : [SimpleToken.Bad, 0];
 
 export type StringTokenizer<S> = S extends `"${infer Tail}`
@@ -113,6 +113,7 @@ export type StringTokenizer<S> = S extends `"${infer Tail}`
     const n = 1;
     if (n !== 1) {
       const _: a = n;
+      _;
     }
   }
 
@@ -121,12 +122,14 @@ export type StringTokenizer<S> = S extends `"${infer Tail}`
     type b = [StringToken<"">, 2];
 
     const _: AssignableAtoB<a, b> = true;
+    _;
   }
   {
     type a = StringTokenizer<'"aaa"'>;
     type b = [StringToken<"aaa">, 5];
 
     const _: AssignableAtoB<a, b> = true;
+    _;
   }
 
   {
@@ -134,52 +137,59 @@ export type StringTokenizer<S> = S extends `"${infer Tail}`
     type b = [StringToken<"aaabbbb">, 9];
 
     const _: AssignableAtoB<a, b> = true;
+    _;
   }
 
   {
     type a = StringTokenizer<'"aaabbbb'>;
     type b = [SimpleToken.Bad, 0];
     const _: AssignableAtoB<a, b> = true;
+    _;
   }
 })();
 
 export type NumberTokenizer<
   S,
   ReadedNumber extends number = ReadNumber<S>,
-> =
-  ReadedNumber extends never
+> = ReadedNumber extends never
   ? never
-  : [NumberToken<ReadedNumber>, StringLength<`${ReadedNumber}`>]
+  : [NumberToken<ReadedNumber>, StringLength<`${ReadedNumber}`>];
 
-(function() {
+(function () {
   {
-    type a = NumberTokenizer<"123">
-    type b = [NumberToken<123>, 3]
+    type a = NumberTokenizer<"123">;
+    type b = [NumberToken<123>, 3];
 
-    const _: Equal<a, b> = true
+    const _: Equal<a, b> = true;
+    _;
   }
 
   {
-    type a = NumberTokenizer<"123456789">
-    type b = [NumberToken<123456789>, 9]
+    type a = NumberTokenizer<"123456789">;
+    type b = [NumberToken<123456789>, 9];
 
-    const _: Equal<a, b> = true
+    const _: Equal<a, b> = true;
+    _;
   }
 
   {
-    type a = NumberTokenizer<"123abc">
-    type b = [NumberToken<123>, 3]
-    const _: Equal<a, b> = true
+    type a = NumberTokenizer<"123abc">;
+    type b = [NumberToken<123>, 3];
+    const _: Equal<a, b> = true;
+    _;
   }
   {
-    type a = NumberTokenizer<"-123abc">
-    type b = [NumberToken<-123>, 4]
-    const _: Equal<a, b> = true
+    type a = NumberTokenizer<"-123abc">;
+    type b = [NumberToken<-123>, 4];
+    const _: Equal<a, b> = true;
+    _;
   }
   {
-    type a = NumberTokenizer<" ">
-    type b = never
-    const _: Equal<a, b> = true
+    type a = NumberTokenizer<" ">;
+    const _never = 1;
+    if (_never !== 1) {
+      const _: a = _never;
+      _;
+    }
   }
-
-})()
+})();

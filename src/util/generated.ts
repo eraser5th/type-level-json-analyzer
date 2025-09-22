@@ -10770,4 +10770,3 @@ export type Over100<T extends (...args: never[]) => unknown, ARGS_T> = Extract<
     : unknown,
   [ARGS_T, unknown]
 >[1];
-

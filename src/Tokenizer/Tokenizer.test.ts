@@ -9,6 +9,7 @@ import { Equal } from "../util/Equal";
     type b = [SimpleToken.End];
 
     const _: Equal<a, b> = true;
+    _;
   }
 
   // string
@@ -17,6 +18,7 @@ import { Equal } from "../util/Equal";
     type b = [StringToken<"aaa">, SimpleToken.End];
 
     const _: Equal<a, b> = true;
+    _;
   }
 
   // bad string
@@ -25,6 +27,7 @@ import { Equal } from "../util/Equal";
     type b = [SimpleToken.Bad];
 
     const _: Equal<a, b> = true;
+    _;
   }
 
   // number
@@ -33,6 +36,7 @@ import { Equal } from "../util/Equal";
     type b = [NumberToken<1234>, SimpleToken.End];
 
     const _: Equal<a, b> = true;
+    _;
   }
 
   // array
@@ -46,15 +50,16 @@ import { Equal } from "../util/Equal";
       SimpleToken.Comma,
       NumberToken<3>,
       SimpleToken.RightSquareBracket,
-      SimpleToken.End
+      SimpleToken.End,
     ];
 
     const _: Equal<a, b> = true;
+    _;
   }
 
   // some tokens
   {
-    type input = '[true]false{} \n\t 123"hoge"'
+    type input = '[true]false{} \n\t 123"hoge"';
     type a = Tokenizer<input>;
     type b = [
       SimpleToken.LeftSquareBracket,
@@ -73,9 +78,10 @@ import { Equal } from "../util/Equal";
     ];
 
     const _: Equal<a, b> = true;
+    _;
   }
   {
-    type input = "[1, \"hoge\", 3]"
+    type input = '[1, "hoge", 3]';
     type a = Tokenizer<input>;
     type b = [
       SimpleToken.LeftSquareBracket,
@@ -90,22 +96,24 @@ import { Equal } from "../util/Equal";
       SimpleToken.End,
     ];
     const _: Equal<a, b> = true;
+    _;
   }
   {
-    type input = "[ ]"
-    type a = Tokenizer<input>
+    type input = "[ ]";
+    type a = Tokenizer<input>;
     type b = [
       SimpleToken.LeftSquareBracket,
       SimpleToken.WhiteSpace,
       SimpleToken.RightSquareBracket,
       SimpleToken.End,
-    ]
+    ];
 
-    const _: Equal<a, b> = true
+    const _: Equal<a, b> = true;
+    _;
   }
   {
-    type input = "{ \"key\": 123 }"
-    type result = Tokenizer<input>
+    type input = '{ "key": 123 }';
+    type result = Tokenizer<input>;
     type expected = [
       SimpleToken.LeftBrace,
       SimpleToken.WhiteSpace,
@@ -116,8 +124,9 @@ import { Equal } from "../util/Equal";
       SimpleToken.WhiteSpace,
       SimpleToken.RightBrace,
       SimpleToken.End,
-    ]
+    ];
 
-    const _: Equal<result, expected> = true
+    const _: Equal<result, expected> = true;
+    _;
   }
 })();

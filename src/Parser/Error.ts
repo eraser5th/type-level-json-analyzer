@@ -1,17 +1,17 @@
-import { SimpleToken, Token } from "../Token"
+import { SimpleToken, Token } from "../Token";
 
 export enum SimpleError {
-  InvalidObjectField = 'InvalidObjectField',
-  InvalidArrayElement = 'InvalidArrayElement',
-  InvalidValue = 'InvalidValue',
-  UnexpectedEndOfInput = 'UnexpectedEndOfInput',
+  InvalidObjectField = "InvalidObjectField",
+  InvalidArrayElement = "InvalidArrayElement",
+  InvalidValue = "InvalidValue",
+  UnexpectedEndOfInput = "UnexpectedEndOfInput",
 
-  UnImplemented = 'UnImplemented',
+  UnImplemented = "UnImplemented",
 }
 
 export type UnexpectedToken<T extends Token = SimpleToken.Bad> = {
-  type: "UnexpectedToken",
-  token: T,
-}
+  type: "UnexpectedToken";
+  token: T;
+};
 
-export type ParseError = SimpleError | UnexpectedToken
+export type ParseError = SimpleError | UnexpectedToken;

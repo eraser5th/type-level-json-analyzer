@@ -28,7 +28,7 @@ type TokenizeOnce<S extends string> =
   | RightSquareBracketTokenizer<S>
   | StringTokenizer<S>
   | CommaTokenizer<S>
-  | NumberTokenizer<S>
+  | NumberTokenizer<S>;
 
 type TokenizerInner<
   S extends string,
@@ -36,16 +36,13 @@ type TokenizerInner<
   End = EndTokenizer<S> extends never ? false : true,
   Result extends [Token, number] = TokenizeOnce<S>,
   NextToken extends Token = Result[0],
-  ReadedLength extends number = Result[1]
+  ReadedLength extends number = Result[1],
 > = End extends true
   ? [...AccTokens, SimpleToken.End]
   : Result extends never
-  ? [...AccTokens, SimpleToken.Bad]
-  : NextToken extends SimpleToken.Bad
-  ? [...AccTokens, SimpleToken.Bad]
-  : TokenizerInner<
-    SkipString<S, ReadedLength>,
-    [...AccTokens, NextToken]
-  >;
+    ? [...AccTokens, SimpleToken.Bad]
+    : NextToken extends SimpleToken.Bad
+      ? [...AccTokens, SimpleToken.Bad]
+      : TokenizerInner<SkipString<S, ReadedLength>, [...AccTokens, NextToken]>;
 
 export type Tokenizer<S extends string> = TokenizerInner<S>;

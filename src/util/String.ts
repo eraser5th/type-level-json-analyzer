@@ -5,8 +5,8 @@ export type SplitString<
   Acc extends string[] = [],
 > = S extends `${infer Head}${infer Tail}`
   ? Head extends ""
-  ? []
-  : SplitString<Tail, [...Acc, Head]>
+    ? []
+    : SplitString<Tail, [...Acc, Head]>
   : Acc;
 
 (function test_SplitString() {
@@ -43,8 +43,8 @@ export type SkipString<
 > = Acc["length"] extends N
   ? S
   : S extends `${infer _}${infer Tail}`
-  ? SkipString<Tail, N, [...Acc, never]>
-  : "";
+    ? SkipString<Tail, N, [...Acc, never]>
+    : "";
 
 (function test_SkipString() {
   {
@@ -90,10 +90,10 @@ export type JoinToString<
   ia extends never[] = [],
 > =
   LengthEqual<A, []> extends true
-  ? ""
-  : LengthEqual<A, ia> extends true
-  ? Acc
-  : JoinToString<A, Sep, `${Acc}${A[Acc["length"]]}`, [...ia, never]>;
+    ? ""
+    : LengthEqual<A, ia> extends true
+      ? Acc
+      : JoinToString<A, Sep, `${Acc}${A[Acc["length"]]}`, [...ia, never]>;
 
 (function test_JoinToString() {
   {
